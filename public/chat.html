@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <section id="chat">
+        <h1>Learning Chat System</h1>
+
+        <div>
+            <input type="text" id="message-input" placeholder="input your message here...">
+        </div>
+        <div>
+            <button type="button" id="button-submit">Send !</button>
+        </div>
+        <ul id="messages">
+
+        </ul>
+    </section>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const MessageInput = document.querySelector("#message-input")
+        const ButtonSumbit = document.querySelector("#button-submit")
+        const Messages = document.querySelector("#messages")
+
+        const socket = io("http://localhost:7800")
+        socket.on("connect", () => {
+            ButtonSumbit.addEventListener("click", function(event) {
+                socket.emit("messageFromClient", { text: MessageInput.value })
+            })
+
+            socket.on("messageFromServer", (message) => {
+                Messages.innerHTML += `<li>${ message.text }</li>`
+            })
+        })
+
+    </script>
+</body>
+</html>
